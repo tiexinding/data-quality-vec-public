@@ -231,7 +231,7 @@ For all 3 models × 8 domains = **24 points**, plotting s̄_div (Vendi) vs SVD t
 - "Vendi absolute values cross-model incomparable" is a **direct function of embedding anisotropy spectrum distribution**, not a separate phenomenon
 - Vendi Score is mathematically defined as exp(H)/n, isomorphic to SVD spectral entropy / effective rank [11]
 
-**A reviewer caveat**: At current n=24 points, the power-law fit R² is not separately reported; α=4.5 is a point estimate. Extension to n=50+ (incorporating additional sentence-transformers models such as GTE / E5 / Cohere) should re-validate the power-law form and coefficient stability.
+**A reviewer caveat**: At current n=24 points, the power-law fit yields R² = 0.92 with α = -2.22 as a point estimate. Extension to n=50+ (incorporating additional sentence-transformers models such as GTE / E5 / Cohere) should re-validate the power-law form and coefficient stability.
 
 > **Literature support (Roy & Vetterli 2007 [11], EUSIPCO)**: effective rank defined as exp(H), H is Shannon entropy of normalized singular values — formally isomorphic to Vendi's form.
 
@@ -441,7 +441,7 @@ PubMedBERT 0.992 is the most anisotropic model recorded (from-scratch + single h
 
 2. **Diagnostic for "real subcategory signal vs anisotropy artifact"**: compare raw vs whitened silhouette difference. Whitened ≈ 0 → anisotropy artifact; whitened retains signal → real cluster signal. Simple and reproducible.
 
-3. **Anisotropy bias in cross-model consistency**: raw Kendall W = 0.266, whitened W = 0.228 (slightly drops). Indicates raw "cross-model consistency" partially comes from anisotropy common pattern, not true consensus.
+3. **Anisotropy bias in cross-model consistency**: raw Kendall W = 0.266, whitened W = 0.228 (slightly drops; full 7-model × 5-treatment Kendall W table in reference doc § 2.8). Indicates raw "cross-model consistency" partially comes from anisotropy common pattern, not true consensus.
 
 4. **Methodological scope confirmation**: sentence-transformers class models (uniformity-loss trained) are a reasonable basis for silhouette/Vendi measurement; BERT-style models exhibit a **systematic bias** on silhouette (raw values are dominated by anisotropy and collapse to zero after whitening), so cross-paradigm direct comparison is misleading. This finding is precisely why the v2.4 main study actively scopes itself back to sentence-transformers.
 
@@ -468,15 +468,14 @@ See companion data document `阶梯1_完整原始数据_含BERT-baseline_2026042
 
 Figures are stored in the `figures/` subdirectory. Strict main-study / §6-probe split: main-study figures contain only the 3 sentence-transformers models; §6-probe figures additionally include Legal-BERT.
 
-**Main-study (§3) figures** (sentence-transformers only):
+**PDF figure number ↔ source filename mapping** (the in-PDF "Figure 1-4" labels are auto-numbered by pandoc in order of appearance; source files keep the F1-F4 names from earlier versions for git-history continuity):
 
-- **F2 · Vendi-SVD 24-point scatter** (`F2_vendi_svd_st_24pt`) — §3.6 · 3 models × 8 domains, ρ ≈ -0.997 + power-law fit
-- **F3 · s̄ four-component × 3-model heatmap** (`F3_sbar_heatmap_st_3model`) — §3.1 · 4 components × 3 models × 8 domains
-- **F4 · 3 × 3 Spearman matrices** (`F4_spearman_st_3x3`) — §3.2 · one 3×3 pairwise matrix per component
-
-**§6 (probe) figures** (includes Legal-BERT):
-
-- **F1 · Four-mechanism decomposition** (`F1_I6_four_mechanism_decomposition`) — §6 · 4-panel breakdown of FreeLaw "low-diversity" signal (truncation / sub-category recognition / BGE bias / true low-rank)
+| In-PDF label | Source filename | Section | Scope | Content |
+|---|---|---|---|---|
+| Figure 1 | `F3_sbar_heatmap_st_3model` | §3.1 | sentence-transformers only | s̄ four components × 3 models × 8 domains heatmap |
+| Figure 2 | `F4_spearman_st_3x3` | §3.2 | sentence-transformers only | one 3×3 pairwise Spearman matrix per component |
+| Figure 3 | `F2_vendi_svd_st_24pt` | §3.6 | sentence-transformers only | Vendi-SVD 24-point scatter + power-law fit, ρ ≈ -0.997 |
+| Figure 4 | `F1_I6_four_mechanism_decomposition` | §6 | includes Legal-BERT (probe) | 4-panel FreeLaw "low-diversity" decomposition (truncation / sub-category / BGE bias / true low-rank) |
 
 Each figure is provided in PNG + PDF, both bilingual (EN + CN). Naming convention: `F{number}_{description}{_cn or English}.{png,pdf}`.
 

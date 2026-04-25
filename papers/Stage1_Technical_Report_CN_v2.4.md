@@ -231,7 +231,7 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 - "Vendi 跨模型绝对值不可比" 是 **embedding anisotropy 谱分布的直接函数**, 不是单独的现象
 - Vendi Score 数学定义为 exp(H)/n, 与 SVD 谱熵 effective rank [11] 同构
 
-**A 审稿 caveat**: 当前 n=24 点 power-law 拟合 R² 未单独报告; α=4.5 是点估计. 扩展到 n=50+ 后 (加入更多 sentence-transformers 模型如 GTE / E5 / Cohere 等) 应重新验证 power-law 形式与系数稳定性.
+**A 审稿 caveat**: 当前 n=24 点 power-law 拟合 R² = 0.92, α = -2.22 是点估计. 扩展到 n=50+ 后 (加入更多 sentence-transformers 模型如 GTE / E5 / Cohere 等) 应重新验证 power-law 形式与系数稳定性.
 
 > **文献支撑 (Roy & Vetterli 2007 [11], EUSIPCO)**: effective rank 定义为 exp(H), H 是奇异值归一化后的 Shannon 熵 — 与 Vendi 形式同构.
 
@@ -443,7 +443,7 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 2. **判别"真子类信号 vs anisotropy 假象"的诊断**: 比较 raw 与 whitened silhouette 的差值. 若 whitened 后归零 → anisotropy 假象; 若 whitened 后保留信号 → 真聚类信号. 简单可复现.
 
-3. **多模型一致性的 anisotropy 偏置**: raw 下 Kendall W = 0.266, whitened 后 W = 0.228 (反而下降). 说明 raw 下的"跨模型一致性"部分来自 anisotropy 共同模式, 不是真共识.
+3. **多模型一致性的 anisotropy 偏置**: raw 下 Kendall W = 0.266, whitened 后 W = 0.228 (反而下降, 详见 reference 文档 § 2.8 7 模型 5 处理 Kendall W 表). 说明 raw 下的"跨模型一致性"部分来自 anisotropy 共同模式, 不是真共识.
 
 4. **主线范围的方法学确认**: sentence-transformers 类模型 (经 uniformity loss 训练) 在 silhouette/Vendi 上是合理测度; BERT-style 模型在 silhouette 测度上**系统性偏差** (raw 值由 anisotropy 主导, whitening 后归零), 跨范式直接对比会产生误导. 这一发现使本框架在 v2.4 主动收回研究范围至 sentence-transformers.
 
@@ -472,15 +472,14 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 主图存放路径: `figures/` 子目录. 严格按"主线 / §6 探针"分流: 主线版仅含 3 sentence-transformers 模型, §6 探针版含 Legal-BERT.
 
-**主线 (§3) 用图** (sentence-transformers only):
+**PDF 编号 ↔ 源文件名对照** (PDF 内 Figure 1-4 按出现顺序由 pandoc 自动编号; 源文件保留 F1-F4 早期命名以维护 git 历史一致性):
 
-- **F2 · Vendi-SVD 24 点 散点** (`F2_vendi_svd_st_24pt`) — §3.6 · 3 模型 × 8 域, ρ ≈ -0.997 + power-law 拟合
-- **F3 · s̄ 四分量 × 3 模型 heatmap** (`F3_sbar_heatmap_st_3model`) — §3.1 · 4 分量 × 3 模型 × 8 域
-- **F4 · 3 × 3 Spearman 矩阵** (`F4_spearman_st_3x3`) — §3.2 · 4 分量各一个 3 × 3 配对矩阵
-
-**§6 (探针) 用图** (含 Legal-BERT):
-
-- **F1 · 四重机制分解** (`F1_I6_four_mechanism_decomposition`) — §6 · FreeLaw "低多样" 信号的 4 panel 分解 (截断 / 子类识别 / BGE 偏置 / 真低秩)
+| PDF 内编号 | 源文件名 | 章节 | 范围 | 内容 |
+|---|---|---|---|---|
+| Figure 1 | `F3_sbar_heatmap_st_3model` | §3.1 | sentence-transformers only | s̄ 四分量 × 3 模型 × 8 域 heatmap |
+| Figure 2 | `F4_spearman_st_3x3` | §3.2 | sentence-transformers only | 4 分量各一个 3 × 3 pairwise Spearman 矩阵 |
+| Figure 3 | `F2_vendi_svd_st_24pt` | §3.6 | sentence-transformers only | Vendi-SVD 24 点散点 + power-law 拟合, ρ ≈ -0.997 |
+| Figure 4 | `F1_I6_four_mechanism_decomposition` | §6 | 含 Legal-BERT (探针) | FreeLaw "低多样" 信号四重机制分解 (截断 / 子类识别 / BGE 偏置 / 真低秩) |
 
 每张图 PNG + PDF 中英双版各 1 套. 命名约定: `F{编号}_{描述}{_cn or 英文}.{png,pdf}`.
 
