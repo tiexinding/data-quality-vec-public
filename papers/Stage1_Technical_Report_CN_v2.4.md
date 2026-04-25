@@ -19,7 +19,7 @@ header-includes:
 本研究验证 s̄ 数据质量四分量框架 (集中度 s̄_con / 有效量 s̄_num / 重复度 s̄_rep / 分布熵 s̄_div) 在 The Pile 数据集八个子集上的**可测量性**和**跨模型稳健性**, 范围限定在 sentence-transformers 类模型 (MiniLM / BGE-small / BGE-large). 主要发现:
 
 1. **三模型内部 Kendall's W 高度一致**: s̄_num/s̄_rep 完全 identical (理论必然), s̄_con / s̄_div 跨模型 Spearman ρ ≥ 0.81 · Bootstrap 95% CI 不含 0, 正相关显著.
-2. **Vendi 与 SVD 近数学等价**: 24 点 (3 模型 × 8 域) Spearman ρ = **-0.997** (log-log near-perfect 负相关 · power-law $\bar{s}_{div} \propto x^{-4.5}$). 解释了 Vendi 跨模型不可直接比较的几何根源.
+2. **Vendi 与 SVD 近数学等价**: 24 点 (3 模型 × 8 域) Spearman ρ = **-0.997** (log-log near-perfect 负相关 · power-law $\bar{s}_{div} \propto x^{-2.22}$, R²=0.92). 解释了 Vendi 跨模型不可直接比较的几何根源.
 3. **FreeLaw 头段套话密集**: 截断实验中 head→mid s̄_div ↑ **1.77×**. FreeLaw 中段比头段更多样 (与 embedding 选择无关).
 4. **FreeLaw 在 sentence-transformers 视角下属于最低多样梯队**: MiniLM 下 FreeLaw 排第 1 最低 (s̄_div=0.017); BGE-small / BGE-large 下 FreeLaw 排第 2 最低 (ArXiv 0.006 才是第 1 最低). 三模型一致信号: FreeLaw 在 sentence-transformers 视角下属"最低多样梯队 (前 2 名)". **此 claim 仅在 sentence-transformers 范围内成立** · 推广到 BERT-style 视角的尝试见 §6 独立章.
 
@@ -72,7 +72,7 @@ header-includes:
 
 ### 2.2 三个 Sentence-transformers 模型
 
-| 模型 | Params | 维度 | 训练目标 (B1 论文核对) |
+| 模型 | Params | 维度 | 训练目标 |
 |---|---|---|---|
 | all-MiniLM-L6-v2 | 66M | 384 | distillation + multi-task contrastive (1B sentence pairs; Wang et al. 2020 [17]; Reimers & Gurevych 2019 [16]) |
 | BGE-small-en-v1.5 | 33M | 384 | MLM 预训练 → retrieval 对比微调 (RetroMAE [19] + contrastive; Xiao et al. 2023 [18]) |
@@ -214,7 +214,7 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 | BGE-small | 0.660 | 3.00 |
 | BGE-large | 0.625 | 3.31 |
 
-三模型 anisotropy 中等程度 · MiniLM 最弱 (distillation 训练), BGE 略强 (经 MLM 预训练 + retrieval 对比微调阶段 (RetroMAE [19]) 引入了部分各向异性 [4][7]).
+三模型 anisotropy 中等程度. MiniLM 最弱 (distillation 训练); BGE 略强, 因其 MLM 预训练 + retrieval 对比微调阶段 (RetroMAE [19]) 仍保留部分各向异性 [4][7].
 
 ### 3.6 Vendi-SVD 近数学等价性 (24 点 · 核心发现)
 
@@ -223,7 +223,7 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 对所有 3 模型 × 8 域 = **24 个点**, 在 log-log 坐标下作 s̄_div (Vendi) vs SVD top-10 ratio:
 
 - **Spearman ρ = -0.997** (p < 0.0001, n=24)
-- **Power-law fit**: $\bar{s}_{div} \propto x^{-4.5}$
+- **Power-law fit**: $\bar{s}_{div} \propto x^{-2.22}$ (R²=0.92, 24 点 log-log 拟合)
 - 3 模型的点都落在同一条近完美曲线上, 不是 3 条分离的线
 
 **含义**:
@@ -243,7 +243,7 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 2. **截断真实贡献**: head s̄_div = 0.017, mid 0.030 (1.77×) — 但 mid 仍是 8 域最低梯队 (§3.4)
 
 **最终 claim** (sentence-transformers 范围内):
-> FreeLaw 在 sentence-transformers 视角下的 s̄_div 偏低 (排第 1-2 最低) 是稳健现象, 由两层效应叠加: (a) 头段套话密集 (1.77× 放大), (b) 内容本身在 sentence-transformers 几何中分布偏窄. 此 claim **限定 sentence-transformers 范围**, 不推广到 BERT-style 视角 (见 §6 探针发现).
+> FreeLaw 在 sentence-transformers 视角下的 s̄_div 偏低 (**MiniLM 下排第 1 最低, BGE 系列下排第 2 最低 · ArXiv 在 BGE 下为第 1**) 是稳健现象, 由两层效应叠加: (a) 头段套话密集 (1.77× 放大), (b) 内容本身在 sentence-transformers 几何中分布偏窄. 此 claim **限定 sentence-transformers 范围**, 不推广到 BERT-style 视角 (见 §6 探针发现).
 
 ---
 
@@ -254,8 +254,8 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 | 分量 | 跨 3 模型 W | Bootstrap CI 性质 | 结论 |
 |---|---|---|---|
 | s̄_num / s̄_rep | 1.000 (理论必然) | — | 跨模型完全独立 |
-| s̄_con | ~0.92 | CI [0.32, 1.00] 不含 0 | 强一致 |
-| s̄_div | ~0.92 | CI [0.24, 0.97] 不含 0 | 强一致 (绝对值差 5-10× 但排序稳) |
+| s̄_con | 0.878 | CI [0.32, 1.00] 不含 0 | 强一致 |
+| s̄_div | 0.915 | CI [0.24, 0.97] 不含 0 | 强一致 (绝对值差 5-10× 但排序稳) |
 
 **工程启示**: 在 sentence-transformers 范围内, NPM s̄ 四分量是可重复的. 但**绝对值跨模型不可比** (尤其 s̄_div 受 anisotropy 影响), 应仅按排序解读.
 
@@ -278,6 +278,7 @@ s̄_div (Vendi) ≈ SVD top-k ratio 的单调函数. 这对 NPM 框架的影响:
 
 | # | 边界 | 说明 |
 |---|---|---|
+| **L0** | **范围决策不是数据洗白** | 主线选 sentence-transformers 是基于测度合理性 (uniformity loss 训练后 silhouette 适用), 不是隐藏 BERT-style 数据 (§6 完整公开 4 模型 × 8 域 × 5 处理 280 行) |
 | L1 | n = 8 域 | Spearman CI 宽 [0.24, 1.00], 统计力弱; 未来扩 15-20 域 |
 | L2 | ArXiv n=2657 不对称 | upstream sparsity, 可换 SlimPajama |
 | L3 | 截断 2000 字符 | 已证存在偏差 (1.77×), 已登记 |
@@ -294,7 +295,7 @@ s̄_div (Vendi) ≈ SVD top-k ratio 的单调函数. 这对 NPM 框架的影响:
 
 本研究是 NPM "数据→骨架"连线的第一块实证砖. 主要贡献:
 
-- 在 sentence-transformers 范围内, s̄ 四分量框架**可测且可重复** (Kendall W ≥ 0.92)
+- 在 sentence-transformers 范围内, s̄ 四分量框架**可测且可重复** (Kendall W ≥ 0.88)
 - Vendi 和 SVD top-k ratio 的近数学等价性 (ρ=-0.997) 是**embedding 几何**的新观察
 - FreeLaw "假多样" 是 sentence-transformers 范围内的稳健现象 (头段套话 1.77×)
 - §6 独立章揭示 silhouette + contextual embedding 组合的**测度局限性** (方法学贡献)
@@ -307,7 +308,7 @@ s̄_div (Vendi) ≈ SVD top-k ratio 的单调函数. 这对 NPM 框架的影响:
 
 1. (sentence-transformers 范围内) NPM s̄ 四分量框架在 The Pile 八子集上**可测且可重复**:
    - s̄_num / s̄_rep: 跨模型完全独立 (W = 1.000 ties-corrected)
-   - s̄_con / s̄_div: 三模型 Kendall W ≥ 0.92, Bootstrap CI 不含 0
+   - s̄_con W = 0.878, s̄_div W = 0.915 · 均 p < 0.05, Bootstrap CI 不含 0
 
 2. **Vendi 与 SVD top-10 ratio 在 24 点 ρ = -0.997 近数学等价**. Vendi 跨模型绝对值不可比是 embedding 几何性质的直接后果.
 
@@ -379,7 +380,7 @@ s̄_div (Vendi) ≈ SVD top-k ratio 的单调函数. 这对 NPM 框架的影响:
 | BioBERT | 0.160 | 0.160 | 0.094 | 0.094 | **0.002** |
 | PubMedBERT | 0.114 | 0.114 | 0.094 | 0.066 | **-0.005** |
 
-**关键观察**: **whitening 后所有 7 模型在 FreeLaw 上 silhouette ≈ 0** (从 -0.05 到 +0.009). 同样, PubMed Central 在 7 模型 whitening 后 silhouette ≈ 0.
+**关键观察**: **whitening 后所有 7 模型在 FreeLaw 上 silhouette ≈ 0** (从 -0.05 到 +0.009). 我们另外验证 PubMed Central 也呈现相同模式 (whitened silhouette ∈ [-0.027, +0.000], 7 模型 × 8 域 × 5 处理完整 280 行数据见 reference 文档 § 2.6).
 
 → **silhouette 在 contextual embedding 上不是测真 cluster, 是 anisotropy 主导假象**.
 
@@ -444,7 +445,7 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 3. **多模型一致性的 anisotropy 偏置**: raw 下 Kendall W = 0.266, whitened 后 W = 0.228 (反而下降). 说明 raw 下的"跨模型一致性"部分来自 anisotropy 共同模式, 不是真共识.
 
-4. **NPM 主线的合理范围确认**: sentence-transformers 类模型 (经 uniformity loss 训练) 在 silhouette/Vendi 上是合理测度; BERT-style 不直接适用.
+4. **主线范围的方法学确认**: sentence-transformers 类模型 (经 uniformity loss 训练) 在 silhouette/Vendi 上是合理测度; BERT-style 模型在 silhouette 测度上**系统性偏差** (raw 值由 anisotropy 主导, whitening 后归零), 跨范式直接对比会产生误导. 这一发现使本框架在 v2.4 主动收回研究范围至 sentence-transformers.
 
 ### 6.6 §6 限制 (独立章自身的诚实边界)
 
@@ -565,7 +566,7 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 本研究的全部代码、数据和透明数据 reference 文档已在 GitHub 公开:
 
-**Code & data**: <https://github.com/tiexinding/data-quality-vec-public>
+**Code & data**: <https://github.com/tiexinding/data-quality-vec-public> (release: v2.4 / 2026-04-25)
 
 仓库内容: 中英双版技术报告 v2.4 + 主线/探针/消融/5 处理共 19 份 CSV/JSON 数据 + F1-F4 主图 (中英 PNG+PDF 16 份) + 主管道脚本 (`run_stage1_sbar_v2.py`) + SVD 各向异性诊断 + K-scan + 图生成 + PDF 构建脚本. License: MIT.
 

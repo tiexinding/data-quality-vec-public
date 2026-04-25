@@ -19,7 +19,7 @@ header-includes:
 We empirically test the **measurability** and **cross-model robustness** of the s̄ four-component data-quality framework (concentration s̄_con / effective count s̄_num / repetition s̄_rep / distribution entropy s̄_div) on eight subsets of The Pile, **scoped to sentence-transformers class models** (MiniLM / BGE-small / BGE-large). Main findings:
 
 1. **High Kendall's W within three models**: s̄_num/s̄_rep identical (theoretical necessity); s̄_con / s̄_div cross-model Spearman ρ ≥ 0.81; Bootstrap 95% CIs exclude 0; positive correlation significant.
-2. **Vendi and SVD near-mathematical equivalence**: 24 points (3 models × 8 domains) Spearman ρ = **-0.997** (log-log near-perfect negative correlation; power-law $\bar{s}_{div} \propto x^{-4.5}$). Explains the geometric root of Vendi's cross-model incomparability.
+2. **Vendi and SVD near-mathematical equivalence**: 24 points (3 models × 8 domains) Spearman ρ = **-0.997** (log-log near-perfect negative correlation; power-law $\bar{s}_{div} \propto x^{-2.22}$, R²=0.92). Explains the geometric root of Vendi's cross-model incomparability.
 3. **FreeLaw boilerplate concentration at head**: head→mid s̄_div ↑ **1.77×** in slice experiment. Mid section more diverse than head (independent of embedding choice).
 4. **FreeLaw belongs to the lowest-diversity tier under sentence-transformers lens**: MiniLM ranks FreeLaw 1st lowest (s̄_div=0.017); BGE-small / BGE-large rank FreeLaw 2nd lowest (ArXiv 0.006 is 1st). All three models consistently place FreeLaw in the "lowest-2-tier". **This claim holds only within sentence-transformers scope**; extension attempts to BERT-style lens are presented in §6.
 
@@ -72,7 +72,7 @@ The main analysis (§1-§5) of this study uses **only sentence-transformers clas
 
 ### 2.2 Three Sentence-transformers Models
 
-| Model | Params | Dim | Training Objective (B1 paper-verified) |
+| Model | Params | Dim | Training Objective |
 |---|---|---|---|
 | all-MiniLM-L6-v2 | 66M | 384 | distillation + multi-task contrastive (1B sentence pairs; Wang et al. 2020 [17]; Reimers & Gurevych 2019 [16]) |
 | BGE-small-en-v1.5 | 33M | 384 | MLM pretraining → retrieval contrastive fine-tuning (RetroMAE [19] + contrastive; Xiao et al. 2023 [18]) |
@@ -214,7 +214,7 @@ Cross-8-domain mean of top-10 squared-singular-value ratio (l2norm mode):
 | BGE-small | 0.660 | 3.00 |
 | BGE-large | 0.625 | 3.31 |
 
-Three models exhibit moderate anisotropy · MiniLM the weakest (distillation training), BGE slightly higher (MLM pretraining + retrieval contrastive fine-tuning stage with RetroMAE [19] introduces partial anisotropy [4][7]).
+Three models exhibit moderate anisotropy. MiniLM is the weakest (distillation training); BGE is slightly higher because its MLM pretraining + retrieval contrastive fine-tuning stage (RetroMAE [19]) still retains partial anisotropy [4][7].
 
 ### 3.6 Vendi-SVD Near-Mathematical Equivalence (24 points · core finding)
 
@@ -223,7 +223,7 @@ Three models exhibit moderate anisotropy · MiniLM the weakest (distillation tra
 For all 3 models × 8 domains = **24 points**, plotting s̄_div (Vendi) vs SVD top-10 ratio in log-log coordinates:
 
 - **Spearman ρ = -0.997** (p < 0.0001, n=24)
-- **Power-law fit**: $\bar{s}_{div} \propto x^{-4.5}$
+- **Power-law fit**: $\bar{s}_{div} \propto x^{-2.22}$ (R²=0.92, 24-point log-log fit)
 - All three models' points collapse onto essentially one curve, not three separate lines
 
 **Implications**:
@@ -243,7 +243,7 @@ Within sentence-transformers scope, FreeLaw's counterintuitive low con + low div
 2. **Truncation real contribution**: head s̄_div = 0.017, mid 0.030 (1.77×) — but mid still in lowest tier (§3.4)
 
 **Final claim** (within sentence-transformers scope):
-> FreeLaw's low s̄_div under sentence-transformers lens (rank 1-2 lowest) is a robust phenomenon, decomposing into two layers: (a) head boilerplate concentration (1.77× amplification), (b) content itself distributed in a narrower geometry under sentence-transformers. **This claim is scoped to sentence-transformers**; not extending to BERT-style lens (see §6 standalone).
+> FreeLaw's low s̄_div under sentence-transformers lens (**rank 1 lowest under MiniLM; rank 2 lowest under BGE-small/large, with ArXiv ranking 1st under BGE**) is a robust phenomenon, decomposing into two layers: (a) head boilerplate concentration (1.77× amplification), (b) content itself distributed in a narrower geometry under sentence-transformers. **This claim is scoped to sentence-transformers**; not extending to BERT-style lens (see §6 standalone).
 
 ---
 
@@ -254,8 +254,8 @@ Within sentence-transformers scope, FreeLaw's counterintuitive low con + low div
 | Component | 3-model W | Bootstrap CI | Conclusion |
 |---|---|---|---|
 | s̄_num / s̄_rep | 1.000 (theoretical) | — | Cross-model fully independent |
-| s̄_con | ~0.92 | CI [0.32, 1.00] excl. 0 | Strong consistency |
-| s̄_div | ~0.92 | CI [0.24, 0.97] excl. 0 | Strong consistency (absolute values diff 5-10× but ranking stable) |
+| s̄_con | 0.878 | CI [0.32, 1.00] excl. 0 | Strong consistency |
+| s̄_div | 0.915 | CI [0.24, 0.97] excl. 0 | Strong consistency (absolute values diff 5-10× but ranking stable) |
 
 **Engineering takeaway**: Within sentence-transformers scope, NPM s̄ four components are reproducible. But **absolute values are cross-model incomparable** (especially s̄_div affected by anisotropy); should be interpreted by ranking only.
 
@@ -278,6 +278,7 @@ s̄_div (Vendi) ≈ monotonic function of SVD top-k ratio. Implications for NPM:
 
 | # | Limitation | Description |
 |---|---|---|
+| **L0** | **Scope decision is not data whitewashing** | The choice to scope the main study to sentence-transformers is grounded in measurement validity (silhouette is appropriate after uniformity-loss training); it is NOT a way to hide BERT-style data (§6 fully discloses 4 models × 8 domains × 5 treatments × 280 silhouette computations) |
 | L1 | n = 8 domains | Spearman CI wide [0.24, 1.00], low statistical power; future extend to 15-20 |
 | L2 | ArXiv n=2657 asymmetric | upstream sparsity, can switch to SlimPajama |
 | L3 | 2000-character truncation | Documented bias (1.77×), already noted |
@@ -294,7 +295,7 @@ s̄_div (Vendi) ≈ monotonic function of SVD top-k ratio. Implications for NPM:
 
 This study is the first empirical stepping-stone on the "data → weight skeleton" edge of the NPM framework. Main contributions:
 
-- Within sentence-transformers scope, s̄ four-component framework is **measurable and reproducible** (Kendall W ≥ 0.92)
+- Within sentence-transformers scope, s̄ four-component framework is **measurable and reproducible** (Kendall W ≥ 0.88)
 - Vendi and SVD top-k ratio's near-mathematical equivalence (ρ=-0.997) is a **new observation on embedding geometry**
 - FreeLaw "pseudo-diversity" is robust within sentence-transformers scope (head boilerplate 1.77×)
 - §6 standalone reveals **measurement limitation** of silhouette + contextual embedding combinations (methodological contribution)
@@ -307,7 +308,7 @@ Future direction: moving from observational to interventional — verifying s̄ 
 
 1. (Within sentence-transformers scope) NPM s̄ four-component framework is **measurable and reproducible** on 8 Pile subsets:
    - s̄_num / s̄_rep: cross-model fully independent (W = 1.000 ties-corrected)
-   - s̄_con / s̄_div: three-model Kendall W ≥ 0.92, Bootstrap CIs exclude 0
+   - s̄_con W = 0.878, s̄_div W = 0.915 · all p < 0.05, Bootstrap CIs exclude 0
 
 2. **Vendi and SVD top-10 ratio achieve ρ = -0.997 across 24 points · near-mathematical equivalence**. Vendi cross-model incomparability is a direct geometric consequence.
 
@@ -379,7 +380,7 @@ We computed silhouette under 5 treatments for 7 models (3 sentence-transformers 
 | BioBERT | 0.160 | 0.160 | 0.094 | 0.094 | **0.002** |
 | PubMedBERT | 0.114 | 0.114 | 0.094 | 0.066 | **-0.005** |
 
-**Critical observation**: **After whitening, all 7 models on FreeLaw silhouette ≈ 0** (from -0.05 to +0.009). Same pattern on PubMed Central across 7 models.
+**Critical observation**: **After whitening, all 7 models on FreeLaw silhouette ≈ 0** (from -0.05 to +0.009). We additionally verified that PubMed Central exhibits the same pattern (whitened silhouette ∈ [-0.027, +0.000]; full 7 models × 8 domains × 5 treatments = 280 rows in reference doc § 2.6).
 
 → **Silhouette on contextual embedding is NOT measuring real clusters; it's an anisotropy-dominated artifact**.
 
@@ -442,7 +443,7 @@ PubMedBERT 0.992 is the most anisotropic model recorded (from-scratch + single h
 
 3. **Anisotropy bias in cross-model consistency**: raw Kendall W = 0.266, whitened W = 0.228 (slightly drops). Indicates raw "cross-model consistency" partially comes from anisotropy common pattern, not true consensus.
 
-4. **Confirms NPM main scope**: sentence-transformers class models (uniformity loss trained) are reasonable measurement on silhouette/Vendi; BERT-style not directly applicable.
+4. **Methodological scope confirmation**: sentence-transformers class models (uniformity-loss trained) are a reasonable basis for silhouette/Vendi measurement; BERT-style models exhibit a **systematic bias** on silhouette (raw values are dominated by anisotropy and collapse to zero after whitening), so cross-paradigm direct comparison is misleading. This finding is precisely why the v2.4 main study actively scopes itself back to sentence-transformers.
 
 ### 6.6 §6 Limitations (this standalone chapter's own honest boundaries)
 
@@ -561,7 +562,7 @@ This appendix lists the 25 references involved in this study, organized into 6 t
 
 All code, data, and a transparent data-reference document for this study are publicly available on GitHub:
 
-**Code & data**: <https://github.com/tiexinding/data-quality-vec-public>
+**Code & data**: <https://github.com/tiexinding/data-quality-vec-public> (release: v2.4 / 2026-04-25)
 
 Repository contents: bilingual technical report v2.4 (EN + CN) + 19 CSV/JSON data files (primary / probe / ablation / 5-treatment) + F1-F4 main figures (16 PNG/PDF, EN + CN) + main pipeline script (`run_stage1_sbar_v2.py`) + SVD anisotropy diagnostic + K-scan + figure generation + PDF builder. License: MIT.
 
@@ -569,8 +570,5 @@ Intermediate embeddings (`.npy`, ~380 MB) and text caches (~137 MB) are NOT incl
 
 ---
 
-**Version**: v2.4 sentence-transformers main · 2026-04-25
-**Drafted by**: B2 (revising from v2.1 + B1 4-25 Rule 14 splitting strategy)
-**Reviewers**: B1 (4-25 16:21 three must-fix + four suggestions) · A
-**Next version**: v2.5 + lawyer's qualitative feedback (pending) + GTE/E5 4th-5th sentence-transformers
-**Release intent**: Zenodo deposit · main scope kept clean and clear · §6 standalone as methodological contribution
+**Version**: v2.4 · 2026-04-25
+**Release intent**: Zenodo deposit · main scope strictly sentence-transformers · §6 standalone methodological contribution

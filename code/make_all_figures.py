@@ -148,10 +148,10 @@ def make_f1(lang):
     # Arrow text at top-left (safe zone)
     ratio_b = con_vals[3] / np.mean(con_vals[:3])
     ax.annotate(
-        T(f"{ratio_b:.1f}× amplification\n(legal specialist sees\nsubcategory structure)",
-          f"{ratio_b:.1f}× 放大\n(法律专模看到子类)", lang),
+        T(f"{ratio_b:.1f}× vs sentence-transformers\n(only 1.02× vs BERT-base baseline\n0.102 — see §6.1)",
+          f"相对 sentence-transformers {ratio_b:.1f}×\n(相对真通用 BERT-base 仅 1.02×\n见 §6.1 baseline)", lang),
         xy=(3, con_vals[3]), xytext=(0.02, 0.88), textcoords="axes fraction",
-        fontsize=9, color="#D55E00", fontweight="bold", ha="left", va="top",
+        fontsize=8.5, color="#D55E00", fontweight="bold", ha="left", va="top",
         arrowprops=dict(arrowstyle="->", color="#D55E00", lw=1.3, connectionstyle="arc3,rad=-0.2")
     )
     ax.set_ylabel(T("$\\bar{s}_{con}$ on FreeLaw", "FreeLaw 上的 $\\bar{s}_{con}$", lang))
