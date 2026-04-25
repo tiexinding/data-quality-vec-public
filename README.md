@@ -99,7 +99,13 @@ Every number in the v2.4 paper is traceable to a CSV/JSON in `data/`. The transp
 }
 ```
 
-A Zenodo DOI will be added here once the v2.4 deposit is finalized.
+**Zenodo DOI** (to be filled in after v2.4 deposit is finalized):
+
+```
+10.5281/zenodo.XXXXXXXX
+```
+
+Once the deposit lands, this README, the BibTeX entry above, and the code+data link in the paper will be updated to point at the canonical DOI.
 
 ## Related work
 

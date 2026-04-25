@@ -563,4 +563,14 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 [25] **Ding, T.** (2026). Cross-Family Convergence of Neural Network Weight Skeletons (NPM-K). Zenodo. DOI: 10.5281/zenodo.19652706.
 
+### 附录 D · 代码与数据可用性
+
+本研究的全部代码、数据和透明数据 reference 文档已在 GitHub 公开:
+
+**Code & data**: <https://github.com/tiexinding/data-quality-vec-public>
+
+仓库内容: 中英双版技术报告 v2.4 + 主线/探针/消融/5 处理共 19 份 CSV/JSON 数据 + F1-F4 主图 (中英 PNG+PDF 16 份) + 主管道脚本 (`run_stage1_sbar_v2.py`) + SVD 各向异性诊断 + K-scan + 图生成 + PDF 构建脚本. License: MIT.
+
+中间 embedding (`.npy`, ~380 MB) 与 text cache (~137 MB) 不入仓, 可由 `code/run_stage1_sbar_v2.py` 从 `monology/pile-uncopyrighted` (HuggingFace) + 各模型 checkpoint 重新生成.
+
 ---
