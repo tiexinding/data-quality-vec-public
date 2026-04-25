@@ -101,6 +101,8 @@ The main analysis (§1-§5) of this study uses **only sentence-transformers clas
 
 ### 3.1 Base Data (8 domains × 3 models × 4 components)
 
+![Figure 3 · s̄ four components × 8 domains × 3 sentence-transformers models · within-paradigm ranking stability](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model.pdf){width=92%}
+
 #### s̄_con
 
 | Subset | n | MiniLM | BGE-small | BGE-large |
@@ -145,6 +147,8 @@ Identical across three models:
 | USPTO Backgrounds | 5000 | 0.999 | 0.001 |
 
 ### 3.2 Cross-Model Stability (Spearman ρ + Kendall's W)
+
+![Figure 4 · Cross-model stability · pairwise Spearman ρ (3 sentence-transformers) · within-paradigm ranking agreement](ablation_results_20260424/figures/F4_spearman_st_3x3.pdf){width=80%}
 
 #### Pairwise Spearman ρ (3 models × 8 domains)
 
@@ -213,6 +217,8 @@ Cross-8-domain mean of top-10 squared-singular-value ratio (l2norm mode):
 Three models exhibit moderate anisotropy · MiniLM the weakest (distillation training), BGE slightly higher (MLM pretraining + retrieval contrastive fine-tuning stage with RetroMAE [19] introduces partial anisotropy [4][7]).
 
 ### 3.6 Vendi-SVD Near-Mathematical Equivalence (24 points · core finding)
+
+![Figure 2 · Vendi-SVD triangulation (sentence-transformers only, n=24, ρ ≈ -0.997)](ablation_results_20260424/figures/F2_vendi_svd_st_24pt.pdf){width=85%}
 
 For all 3 models × 8 domains = **24 points**, plotting s̄_div (Vendi) vs SVD top-10 ratio in log-log coordinates:
 
@@ -426,6 +432,8 @@ PubMedBERT 0.992 is the most anisotropic model recorded (from-scratch + single h
 
 > **Gao et al. 2019 [2] (ICLR) + Wang et al. 2020 [3] (ICLR)**: Theoretical foundations of anisotropy — softmax + weight tying + Zipf long-tail → narrow cone for low-frequency tokens. → Explains why BERT-style models (without uniformity loss) are necessarily strongly anisotropic.
 
+![Figure 1 · §6 probe summary · four-mechanism decomposition of FreeLaw "low-diversity" signal (includes Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition.pdf){width=95%}
+
 ### 6.5 §6 Methodological Contributions (independent of main study)
 
 1. **Silhouette on contextual embedding is not real cluster measure**: 7 models × 8 domains × whitening = 280 silhouette mostly ≈ 0. Provides empirical evidence for limits of "silhouette + contextual embedding" combination.
@@ -457,29 +465,19 @@ See companion data document `阶梯1_完整原始数据_含BERT-baseline_2026042
 
 ## Appendix B · Main Figures
 
-Figures are stored in the `figures/` subdirectory · bilingual EN/CN versions · 4 figures × (PNG + PDF) each. Naming convention: `F{number}_{description}{_cn or English}.{png,pdf}`.
+Figures are stored in the `figures/` subdirectory. Strict main-study / §6-probe split: main-study figures contain only the 3 sentence-transformers models; §6-probe figures additionally include Legal-BERT.
 
-**F1 · I6 Four-Mechanism Decomposition**
+**Main-study (§3) figures** (sentence-transformers only):
 
-- Content: Truncation / sub-category recognition / BGE bias / true low-rank · 4-panel
-- Scope: Contains BERT models, §6 standalone reference only
+- **F2 · Vendi-SVD 24-point scatter** (`F2_vendi_svd_st_24pt`) — §3.6 · 3 models × 8 domains, ρ ≈ -0.997 + power-law fit
+- **F3 · s̄ four-component × 3-model heatmap** (`F3_sbar_heatmap_st_3model`) — §3.1 · 4 components × 3 models × 8 domains
+- **F4 · 3 × 3 Spearman matrices** (`F4_spearman_st_3x3`) — §3.2 · one 3×3 pairwise matrix per component
 
-**F2 · Vendi-SVD Triangulation (32-point scatter ρ=-0.997)**
+**§6 (probe) figures** (includes Legal-BERT):
 
-- Content: 4 models × 8 domains = 32 points + power-law fit
-- Scope: Contains Legal-BERT data; main §3.6 references 24-point (sentence-transformers only) version
+- **F1 · Four-mechanism decomposition** (`F1_I6_four_mechanism_decomposition`) — §6 · 4-panel breakdown of FreeLaw "low-diversity" signal (truncation / sub-category recognition / BGE bias / true low-rank)
 
-**F3 · s̄ Four-Component Heatmap**
-
-- Content: 4 components × 4 models × 8 domains heatmap
-- Scope: Contains BERT models
-
-**F4 · Pairwise Spearman Matrices**
-
-- Content: 4 × 4 cross-model correlation matrices
-- Scope: Contains BERT models; main §3.2 reports 3 × 3 version numbers
-
-**Note**: Some original figures contain BERT models. A strict main-PDF should redraw sentence-transformers-only versions. The current version uses existing figures with caveats annotating their reference scope.
+Each figure is provided in PNG + PDF, both bilingual (EN + CN). Naming convention: `F{number}_{description}{_cn or English}.{png,pdf}`.
 
 ## Appendix C · Related Work
 

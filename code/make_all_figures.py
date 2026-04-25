@@ -432,16 +432,213 @@ def make_f4(lang):
 
 
 # ===================================================================
+# Main-study figures (sentence-transformers ONLY, 3 models · for paper §3)
+# ===================================================================
+ST_MODELS = ["minilm", "bge_small", "bge_large"]
+ST_MODEL_LABELS = ["MiniLM", "BGE-small", "BGE-large"]
+ST_MODEL_COLORS = ["#0072B2", "#009E73", "#56B4E9"]
+ST_MODEL_MARKERS = ["o", "s", "^"]
+
+
+def make_f2_st(lang):
+    """F2 main-study version · 24 points · sentence-transformers only."""
+    configure_mpl(lang)
+    fig, ax = plt.subplots(figsize=(9.5, 7))
+    fig.suptitle(
+        T("Figure 2 · Vendi-SVD triangulation (sentence-transformers only, n=24)",
+          "图 2 · Vendi-SVD 三角印证 (sentence-transformers 主线 · n=24)", lang) + "\n"
+        + T("$\\it{Two\\ independent\\ metrics\\ report\\ same\\ embedding\\ geometry}$",
+            "— 两个独立测度共同揭示嵌入空间几何 —", lang),
+        fontsize=13, y=0.99
+    )
+    points = []
+    for mi, m in enumerate(ST_MODELS):
+        for d in DOMAINS:
+            s_div = sbar[m][sbar[m]["subset"] == d]["s_bar_div"].values[0]
+            d_sl = d.replace(" (en)", "_en").replace(" Central", "_Central").replace(" Backgrounds", "_Backgrounds")
+            r = aniso_all[(aniso_all["model"] == m) & (aniso_all["domain"] == d_sl) & (aniso_all["mode"] == "l2norm")]
+            if len(r) == 0:
+                continue
+            points.append((r["top10_ratio"].values[0], s_div, m, d, mi))
+    for mi, m in enumerate(ST_MODELS):
+        xs = [p[0] for p in points if p[2] == m]
+        ys = [p[1] for p in points if p[2] == m]
+        ax.scatter(xs, ys, color=ST_MODEL_COLORS[mi], marker=ST_MODEL_MARKERS[mi], s=110,
+                   label=ST_MODEL_LABELS[mi], edgecolors="black", linewidths=0.7, zorder=3)
+        for p in points:
+            if p[2] == m and p[3] == "FreeLaw":
+                y_offset = 0.003 + 0.001 * mi
+                x_offset = 0.02 if mi < 2 else -0.02
+                ha = "left" if mi < 2 else "right"
+                ax.annotate("FreeLaw", xy=(p[0], p[1]), xytext=(p[0]+x_offset, p[1]*1.3),
+                            fontsize=7.5, color=ST_MODEL_COLORS[mi], fontweight="bold", ha=ha)
+    xs_all = np.array([p[0] for p in points]); ys_all = np.array([p[1] for p in points])
+    valid = (ys_all > 0) & (xs_all > 0)
+    coef = np.polyfit(np.log(xs_all[valid]), np.log(ys_all[valid]), 1)
+    x_fit = np.linspace(xs_all.min(), xs_all.max(), 50)
+    y_fit = np.exp(coef[1]) * x_fit ** coef[0]
+    ax.plot(x_fit, y_fit, "--", color="gray", alpha=0.7, linewidth=1.5,
+            label=T(f"Power-law fit: $y \\propto x^{{{coef[0]:.2f}}}$",
+                    f"幂律拟合: $y \\propto x^{{{coef[0]:.2f}}}$", lang))
+    rho_all, p_all = spearmanr(xs_all, ys_all)
+    ax.set_xlabel(T("SVD top-10 ratio (l2norm) · more isotropic $\\leftarrow$  $\\rightarrow$ more anisotropic",
+                    "SVD top-10 比值 (l2归一化) · 更各向同性 $\\leftarrow$  $\\rightarrow$ 更各向异性", lang))
+    ax.set_ylabel(T("$\\bar{s}_{div}$ (Vendi Score, log scale)",
+                    "$\\bar{s}_{div}$ (Vendi 得分, 对数轴)", lang))
+    ax.set_yscale("log")
+    ax.set_xlim(0, 1.0)
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(loc="upper right", frameon=True, framealpha=0.9)
+    ax.text(0.02, 0.03,
+        T(f"Spearman $\\rho = {rho_all:.3f}$ (p = {p_all:.4g}, n=24)\n"
+          "→ Two metrics near-mathematically equivalent\n"
+          "→ Vendi cross-model incomparability is a\n"
+          "   direct consequence of embedding geometry",
+          f"Spearman $\\rho = {rho_all:.3f}$ (p = {p_all:.4g}, n=24)\n"
+          "→ 两测度数学上近乎等价\n"
+          "→ Vendi 跨模型绝对值不可比是\n"
+          "   嵌入空间几何的直接后果", lang),
+        transform=ax.transAxes, fontsize=8.5,
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#E8F4F8", edgecolor="#0072B2"))
+    plt.tight_layout(rect=(0, 0, 1, 0.95))
+    fn = f"F2_vendi_svd_st_24pt{'_cn' if lang == 'cn' else ''}"
+    fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
+    fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"F2-ST ({lang}) saved: ρ = {rho_all:.3f}, n=24")
+
+
+def make_f3_st(lang):
+    """F3 main-study version · 3 sentence-transformers models × 8 domains × 4 components."""
+    configure_mpl(lang)
+    fig, axs = plt.subplots(2, 2, figsize=(13, 7))
+    fig.suptitle(
+        T("Figure 3 · $\\bar{s}$ four components × 8 domains × 3 sentence-transformers models",
+          "图 3 · $\\bar{s}$ 四分量 × 8 域 × 3 sentence-transformers 模型", lang) + "\n"
+        + T("$\\it{Cross-model\\ ranking\\ stability\\ within\\ paradigm}$",
+            "— 范式内跨模型排序稳定 —", lang),
+        fontsize=13, y=1.00
+    )
+    comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
+    domain_shorts = DOMAIN_SHORT_CN if lang == "cn" else DOMAIN_SHORT_EN
+    for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
+        ax = axs[ci // 2, ci % 2]
+        mat = np.zeros((3, 8))
+        for mi, m in enumerate(ST_MODELS):
+            for di, d in enumerate(DOMAINS):
+                mat[mi, di] = sbar[m][sbar[m]["subset"] == d][comp].values[0]
+        im = ax.imshow(mat, cmap=WONG_SEQUENTIAL, aspect="auto")
+        ax.set_xticks(np.arange(8)); ax.set_xticklabels(domain_shorts, rotation=40, ha="right")
+        ax.set_yticks(np.arange(3)); ax.set_yticklabels(ST_MODEL_LABELS)
+        # Compute Kendall W from the 3-model rank consistency
+        from scipy.stats import rankdata
+        ranks = np.array([rankdata(mat[i, :]) for i in range(3)])
+        n_items = 8; n_raters = 3
+        S = np.sum((np.sum(ranks, axis=0) - n_raters * (n_items + 1) / 2) ** 2)
+        w_val = 12 * S / (n_raters ** 2 * (n_items ** 3 - n_items))
+        w_color = "#2E7D32" if w_val >= 0.7 else ("#F57C00" if w_val >= 0.5 else "#C62828")
+        verdict = T("strong", "强一致", lang) if w_val >= 0.7 else (
+                  T("moderate", "中一致", lang) if w_val >= 0.5 else T("weak", "弱一致", lang))
+        ax.set_title(f"({'abcd'[ci]}) {label}\nKendall W = {w_val:.3f} ({verdict})",
+                     loc="left", fontweight="bold", color=w_color)
+        for mi in range(3):
+            for di in range(8):
+                v = mat[mi, di]
+                norm_v = (v - mat.min()) / (mat.max() - mat.min() + 1e-12)
+                txt_color = "white" if norm_v > 0.55 else "black"
+                ax.text(di, mi, f"{v:.3f}"[:5], ha="center", va="center",
+                        fontsize=8, color=txt_color)
+        fig.colorbar(im, ax=ax, shrink=0.85, pad=0.02)
+    plt.tight_layout(rect=(0, 0, 1, 0.96))
+    fn = f"F3_sbar_heatmap_st_3model{'_cn' if lang == 'cn' else ''}"
+    fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
+    fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"F3-ST ({lang}) saved")
+
+
+def make_f4_st(lang):
+    """F4 main-study version · 3×3 pairwise Spearman matrices · sentence-transformers only."""
+    configure_mpl(lang)
+    fig, axs = plt.subplots(2, 2, figsize=(10, 9.5))
+    fig.suptitle(
+        T("Figure 4 · Cross-model stability · pairwise Spearman $\\rho$ (3 sentence-transformers)",
+          "图 4 · 跨模型稳定性 · 两两 Spearman $\\rho$ (3 sentence-transformers)", lang) + "\n"
+        + T("$\\it{Strong\\ cross-model\\ ranking\\ agreement\\ within\\ paradigm}$",
+            "— 范式内跨模型排序高度一致 —", lang),
+        fontsize=13, y=0.99
+    )
+    comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
+    from scipy.stats import rankdata
+    for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
+        ax = axs[ci // 2, ci % 2]
+        # Build 3x3 Spearman ρ matrix
+        vals = np.zeros((3, 8))
+        for mi, m in enumerate(ST_MODELS):
+            for di, d in enumerate(DOMAINS):
+                vals[mi, di] = sbar[m][sbar[m]["subset"] == d][comp].values[0]
+        rho_mat = np.zeros((3, 3))
+        for i in range(3):
+            for j in range(3):
+                if i == j:
+                    rho_mat[i, j] = 1.0
+                else:
+                    rho_mat[i, j] = spearmanr(vals[i, :], vals[j, :]).correlation
+        # Kendall W
+        ranks = np.array([rankdata(vals[i, :]) for i in range(3)])
+        n_items = 8; n_raters = 3
+        S = np.sum((np.sum(ranks, axis=0) - n_raters * (n_items + 1) / 2) ** 2)
+        w_val = 12 * S / (n_raters ** 2 * (n_items ** 3 - n_items))
+        # χ² and p (Friedman approximation: χ² = n_raters × (n_items - 1) × W)
+        from scipy.stats import chi2 as chi2_dist
+        chi2_val = n_raters * (n_items - 1) * w_val
+        p_val = 1 - chi2_dist.cdf(chi2_val, df=n_items - 1)
+
+        im = ax.imshow(rho_mat, cmap=WONG_DIVERGING, vmin=-1, vmax=1, aspect="auto")
+        ax.set_xticks(range(3)); ax.set_xticklabels(ST_MODEL_LABELS, rotation=30, ha="right")
+        ax.set_yticks(range(3)); ax.set_yticklabels(ST_MODEL_LABELS)
+        for i in range(3):
+            for j in range(3):
+                v = rho_mat[i, j]
+                txt_color = "white" if abs(v) > 0.55 else "black"
+                fw = "bold" if (v < 0 or abs(v) > 0.9) else "normal"
+                ax.text(j, i, f"{v:.2f}", ha="center", va="center",
+                        fontsize=11, color=txt_color, fontweight=fw)
+        if w_val >= 0.7: verdict_color = "#2E7D32"; verdict = T("Strong", "强", lang)
+        elif w_val >= 0.5: verdict_color = "#F57C00"; verdict = T("Moderate", "中", lang)
+        else: verdict_color = "#C62828"; verdict = T("Weak", "弱", lang)
+        ax.set_title(f"({'abcd'[ci]}) {label}\nW = {w_val:.3f} ({verdict}, p = {p_val:.3g})",
+                     loc="left", fontweight="bold", color=verdict_color)
+    plt.tight_layout(rect=(0, 0.03, 0.92, 0.96))
+    cbar_ax = fig.add_axes((0.94, 0.12, 0.018, 0.75))
+    fig.colorbar(im, cax=cbar_ax, label=T("Spearman $\\rho$", "Spearman $\\rho$", lang))
+    fig.text(0.5, 0.01,
+        T("All pairs $\\rho \\geq 0.76$ on $\\bar{s}_{con}$/$\\bar{s}_{div}$; $\\bar{s}_{num}$/$\\bar{s}_{rep}$ are theoretically identical (MinHash).",
+          "$\\bar{s}_{con}$/$\\bar{s}_{div}$ 所有配对 $\\rho \\geq 0.76$; $\\bar{s}_{num}$/$\\bar{s}_{rep}$ 理论恒等 (MinHash).", lang),
+        ha="center", fontsize=9, style="italic" if lang == "en" else "normal")
+    fn = f"F4_spearman_st_3x3{'_cn' if lang == 'cn' else ''}"
+    fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
+    fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"F4-ST ({lang}) saved")
+
+
+# ===================================================================
 # Main
 # ===================================================================
 if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
     for lang in ["en", "cn"]:
         print(f"\n===== Rendering {lang.upper()} figures =====")
+        # Standalone-chapter (§6) figures: 4-model versions
         make_f1(lang)
         make_f2(lang)
         make_f3(lang)
         make_f4(lang)
+        # Main-study (§3) figures: 3 sentence-transformers only
+        make_f2_st(lang)
+        make_f3_st(lang)
+        make_f4_st(lang)
     print("\n===== All files =====")
     import subprocess
     print(subprocess.check_output(f"ls -la {OUT}/ | grep -v '^d'", shell=True).decode())

@@ -101,6 +101,8 @@ header-includes:
 
 ### 3.1 基础数据 (8 域 × 3 模型 × 4 分量)
 
+![图 3 · s̄ 四分量 × 8 域 × 3 sentence-transformers 模型 · 范式内跨模型排序稳定](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model_cn.pdf){width=92%}
+
 #### s̄_con
 
 | Subset | n | MiniLM | BGE-small | BGE-large |
@@ -145,6 +147,8 @@ header-includes:
 | USPTO Backgrounds | 5000 | 0.999 | 0.001 |
 
 ### 3.2 跨模型稳定性 (Spearman ρ + Kendall's W)
+
+![图 4 · 跨模型稳定性 · 两两 Spearman ρ (3 sentence-transformers) · 范式内排序高度一致](ablation_results_20260424/figures/F4_spearman_st_3x3_cn.pdf){width=80%}
 
 #### Pairwise Spearman ρ (3 模型 × 8 域)
 
@@ -213,6 +217,8 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 三模型 anisotropy 中等程度 · MiniLM 最弱 (distillation 训练), BGE 略强 (经 MLM 预训练 + retrieval 对比微调阶段 (RetroMAE [19]) 引入了部分各向异性 [4][7]).
 
 ### 3.6 Vendi-SVD 近数学等价性 (24 点 · 核心发现)
+
+![图 2 · Vendi-SVD 三角印证 · sentence-transformers 主线 · n=24 · ρ ≈ -0.997](ablation_results_20260424/figures/F2_vendi_svd_st_24pt_cn.pdf){width=85%}
 
 对所有 3 模型 × 8 域 = **24 个点**, 在 log-log 坐标下作 s̄_div (Vendi) vs SVD top-10 ratio:
 
@@ -426,6 +432,8 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 > **Gao et al. 2019 [2] (ICLR) + Wang et al. 2020 [3] (ICLR)**: anisotropy 理论根基 — softmax + weight tying + Zipf 长尾 → 低频 token narrow cone. → 解释为何 BERT-style 模型 (无 uniformity loss) 必然各向异性强.
 
+![图 1 · §6 探针总结 · FreeLaw "低多样" 信号的四重机制分解 (含 Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition_cn.pdf){width=95%}
+
 ### 6.5 §6 方法学贡献 (独立于主线)
 
 本独立章给出的方法学发现:
@@ -461,29 +469,19 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 ### 附录 B · 主图清单
 
-主图存放路径: `figures/` 子目录, 中英双版各 4 张 (PNG + PDF 各 2 个). 命名约定: `F{编号}_{描述}{_cn 或英文}.{png,pdf}`.
+主图存放路径: `figures/` 子目录. 严格按"主线 / §6 探针"分流: 主线版仅含 3 sentence-transformers 模型, §6 探针版含 Legal-BERT.
 
-**F1 · I6 四重机制分解**
+**主线 (§3) 用图** (sentence-transformers only):
 
-- 内容: 截断 / 子类识别 / BGE 偏置 / 真低秩 四 panel
-- 范围: 含 BERT 模型, 仅 §6 独立章引用
+- **F2 · Vendi-SVD 24 点 散点** (`F2_vendi_svd_st_24pt`) — §3.6 · 3 模型 × 8 域, ρ ≈ -0.997 + power-law 拟合
+- **F3 · s̄ 四分量 × 3 模型 heatmap** (`F3_sbar_heatmap_st_3model`) — §3.1 · 4 分量 × 3 模型 × 8 域
+- **F4 · 3 × 3 Spearman 矩阵** (`F4_spearman_st_3x3`) — §3.2 · 4 分量各一个 3 × 3 配对矩阵
 
-**F2 · Vendi-SVD 三角印证 (32 点散点 ρ=-0.997)**
+**§6 (探针) 用图** (含 Legal-BERT):
 
-- 内容: 4 模型 × 8 域 = 32 点 + power-law 拟合
-- 范围: 含 Legal-BERT 数据; 主线 §3.6 引用 24 点 (sentence-transformers only) 版本
+- **F1 · 四重机制分解** (`F1_I6_four_mechanism_decomposition`) — §6 · FreeLaw "低多样" 信号的 4 panel 分解 (截断 / 子类识别 / BGE 偏置 / 真低秩)
 
-**F3 · s̄ 四分量热图**
-
-- 内容: 4 分量 × 4 模型 × 8 域 heatmap
-- 范围: 含 BERT 模型
-
-**F4 · pairwise Spearman 矩阵**
-
-- 内容: 4 × 4 cross-model 相关矩阵
-- 范围: 含 BERT 模型; 主线 §3.2 报告 3 × 3 版本数字
-
-**说明**: 部分原图含 BERT 模型, 严格主线 PDF 应重绘只含 sentence-transformers 版本. 当前版本暂用现有图 + caveat 标注引用范围.
+每张图 PNG + PDF 中英双版各 1 套. 命名约定: `F{编号}_{描述}{_cn or 英文}.{png,pdf}`.
 
 ### 附录 C · 相关工作
 
