@@ -100,14 +100,6 @@ def T(en, cn, lang):
 def make_f1(lang):
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(12, 9.5))
-    fig.suptitle(
-        T("Figure 1 · Four-mechanism decomposition of FreeLaw 'low-diversity' signal",
-          "图 1 · FreeLaw 低多样性信号的四重机制分解", lang)
-        + "\n"
-        + T("$\\it{No\\ single\\ cause;\\ independent\\ mechanisms\\ stack}$",
-            "— 非单一成因, 四重独立机制叠加 —", lang),
-        fontsize=13, y=1.00
-    )
 
     # --------- (a) Truncation ---------
     ax = axs[0, 0]
@@ -235,14 +227,7 @@ def make_f1(lang):
         transform=ax.transAxes, va="bottom", ha="left", fontsize=8.5,
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#FFF3E0", edgecolor="#D4A574", linewidth=0.5))
 
-    plt.tight_layout(rect=(0, 0.03, 1, 0.96))
-    # Bottom caption · italic 对 CJK fallback 乱码, 中文版用 normal
-    fig.text(0.5, 0.005,
-        T("Four independent mechanisms stack: (a) ~1.77× truncation bias · (b) generic embeddings miss legal sub-categories · "
-          "(c) BGE bias accounts for ~70% · (d) residual content templating (real but weaker)",
-          "四重独立机制叠加: (a) ~1.77× 截断偏差 · (b) 通用模型看不到法律子类 · "
-          "(c) BGE 偏置占 ~70% · (d) 残余内容模板化 (真但弱)", lang),
-        ha="center", fontsize=9, style="italic" if lang == "en" else "normal")
+    plt.tight_layout()
 
     fn = f"F1_I6_four_mechanism_decomposition{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
@@ -257,13 +242,6 @@ def make_f1(lang):
 def make_f2(lang):
     configure_mpl(lang)
     fig, ax = plt.subplots(figsize=(9.5, 7))
-    fig.suptitle(
-        T("Figure 2 · Vendi-SVD triangulation: $\\bar{s}_{div}$ vs anisotropy",
-          "图 2 · Vendi-SVD 三角印证 · $\\bar{s}_{div}$ 与各向异性", lang) + "\n"
-        + T("$\\it{Two\\ independent\\ metrics\\ report\\ same\\ embedding\\ geometry}$",
-            "— 两个独立测度共同揭示嵌入空间几何 —", lang),
-        fontsize=13, y=0.99
-    )
     points = []
     for mi, m in enumerate(MODELS):
         for d in DOMAINS:
@@ -314,7 +292,7 @@ def make_f2(lang):
           "   嵌入空间几何的直接后果", lang),
         transform=ax.transAxes, fontsize=8.5,
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#E8F4F8", edgecolor="#0072B2"))
-    plt.tight_layout(rect=(0, 0, 1, 0.95))
+    plt.tight_layout()
     fn = f"F2_vendi_svd_triangulation{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
@@ -328,13 +306,6 @@ def make_f2(lang):
 def make_f3(lang):
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(13, 8))
-    fig.suptitle(
-        T("Figure 3 · $\\bar{s}$ four components × 8 domains × 4 embeddings",
-          "图 3 · $\\bar{s}$ 四分量 × 8 域 × 4 嵌入模型", lang) + "\n"
-        + T("$\\it{Stratified\\ embedding-dependence\\ pattern}$",
-            "— 嵌入依赖度呈分层结构 —", lang),
-        fontsize=13, y=1.00
-    )
     comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
     domain_shorts = DOMAIN_SHORT_CN if lang == "cn" else DOMAIN_SHORT_EN
     for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
@@ -362,7 +333,7 @@ def make_f3(lang):
                 ax.text(di, mi, f"{v:.3f}"[:5], ha="center", va="center",
                         fontsize=7.5, color=txt_color)
         fig.colorbar(im, ax=ax, shrink=0.85, pad=0.02)
-    plt.tight_layout(rect=(0, 0, 1, 0.96))
+    plt.tight_layout()
     fn = f"F3_sbar_4comp_heatmap{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
@@ -376,13 +347,6 @@ def make_f3(lang):
 def make_f4(lang):
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(11, 9.5))
-    fig.suptitle(
-        T("Figure 4 · Cross-model stability · Kendall's W + pairwise Spearman $\\rho$",
-          "图 4 · 跨模型稳定性 · Kendall's W + 两两 Spearman $\\rho$", lang) + "\n"
-        + T("$\\it{Legal-BERT\\ breaks\\ cross-model\\ consensus\\ on\\ \\bar{s}_{con}}$",
-            "— 法律专模打破通用模型共识 · 尤其在 $\\bar{s}_{con}$ —", lang),
-        fontsize=13, y=0.99
-    )
     comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
     # Labels with Legal-BERT highlighted differently
     model_labels_mark = MODEL_LABELS.copy()
@@ -415,15 +379,10 @@ def make_f4(lang):
         else: verdict_color = "#C62828"; verdict = T("Weak", "弱", lang)
         ax.set_title(f"({'abcd'[ci]}) {label}\nW = {w_val:.3f} ({verdict}, p = {p_val:.3f})",
                      loc="left", fontweight="bold", color=verdict_color)
-    plt.tight_layout(rect=(0, 0.03, 0.92, 0.96))
+    plt.tight_layout(rect=(0, 0, 0.92, 1))
     # Shared colorbar
     cbar_ax = fig.add_axes((0.94, 0.12, 0.018, 0.75))
     fig.colorbar(im, cax=cbar_ax, label=T("Spearman $\\rho$", "Spearman $\\rho$", lang))
-    # Bottom caption
-    fig.text(0.5, 0.01,
-        T("Legal-BERT ticks shown in red. $\\bar{s}_{con}$: $\\rho = -0.43$ with MiniLM, indicating opposite subcategory rankings.",
-          "法律专模刻度用红色标记. $\\bar{s}_{con}$: 与 MiniLM 之 $\\rho = -0.43$, 说明子类排序相反.", lang),
-        ha="center", fontsize=9, style="italic" if lang == "en" else "normal")
     fn = f"F4_kendall_w_spearman_matrices{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
@@ -444,13 +403,6 @@ def make_f2_st(lang):
     """F2 main-study version · 24 points · sentence-transformers only."""
     configure_mpl(lang)
     fig, ax = plt.subplots(figsize=(9.5, 7))
-    fig.suptitle(
-        T("Figure 2 · Vendi-SVD triangulation (sentence-transformers only, n=24)",
-          "图 2 · Vendi-SVD 三角印证 (sentence-transformers 主线 · n=24)", lang) + "\n"
-        + T("$\\it{Two\\ independent\\ metrics\\ report\\ same\\ embedding\\ geometry}$",
-            "— 两个独立测度共同揭示嵌入空间几何 —", lang),
-        fontsize=13, y=0.99
-    )
     points = []
     for mi, m in enumerate(ST_MODELS):
         for d in DOMAINS:
@@ -500,7 +452,7 @@ def make_f2_st(lang):
           "   嵌入空间几何的直接后果", lang),
         transform=ax.transAxes, fontsize=8.5,
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#E8F4F8", edgecolor="#0072B2"))
-    plt.tight_layout(rect=(0, 0, 1, 0.95))
+    plt.tight_layout()
     fn = f"F2_vendi_svd_st_24pt{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
@@ -512,13 +464,6 @@ def make_f3_st(lang):
     """F3 main-study version · 3 sentence-transformers models × 8 domains × 4 components."""
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(13, 7))
-    fig.suptitle(
-        T("Figure 3 · $\\bar{s}$ four components × 8 domains × 3 sentence-transformers models",
-          "图 3 · $\\bar{s}$ 四分量 × 8 域 × 3 sentence-transformers 模型", lang) + "\n"
-        + T("$\\it{Cross-model\\ ranking\\ stability\\ within\\ paradigm}$",
-            "— 范式内跨模型排序稳定 —", lang),
-        fontsize=13, y=1.00
-    )
     comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
     domain_shorts = DOMAIN_SHORT_CN if lang == "cn" else DOMAIN_SHORT_EN
     for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
@@ -549,7 +494,7 @@ def make_f3_st(lang):
                 ax.text(di, mi, f"{v:.3f}"[:5], ha="center", va="center",
                         fontsize=8, color=txt_color)
         fig.colorbar(im, ax=ax, shrink=0.85, pad=0.02)
-    plt.tight_layout(rect=(0, 0, 1, 0.96))
+    plt.tight_layout()
     fn = f"F3_sbar_heatmap_st_3model{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
@@ -561,13 +506,6 @@ def make_f4_st(lang):
     """F4 main-study version · 3×3 pairwise Spearman matrices · sentence-transformers only."""
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(10, 9.5))
-    fig.suptitle(
-        T("Figure 4 · Cross-model stability · pairwise Spearman $\\rho$ (3 sentence-transformers)",
-          "图 4 · 跨模型稳定性 · 两两 Spearman $\\rho$ (3 sentence-transformers)", lang) + "\n"
-        + T("$\\it{Strong\\ cross-model\\ ranking\\ agreement\\ within\\ paradigm}$",
-            "— 范式内跨模型排序高度一致 —", lang),
-        fontsize=13, y=0.99
-    )
     comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
     from scipy.stats import rankdata
     for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
@@ -609,13 +547,9 @@ def make_f4_st(lang):
         else: verdict_color = "#C62828"; verdict = T("Weak", "弱", lang)
         ax.set_title(f"({'abcd'[ci]}) {label}\nW = {w_val:.3f} ({verdict}, p = {p_val:.3g})",
                      loc="left", fontweight="bold", color=verdict_color)
-    plt.tight_layout(rect=(0, 0.03, 0.92, 0.96))
+    plt.tight_layout(rect=(0, 0, 0.92, 1))
     cbar_ax = fig.add_axes((0.94, 0.12, 0.018, 0.75))
     fig.colorbar(im, cax=cbar_ax, label=T("Spearman $\\rho$", "Spearman $\\rho$", lang))
-    fig.text(0.5, 0.01,
-        T("All pairs $\\rho \\geq 0.76$ on $\\bar{s}_{con}$/$\\bar{s}_{div}$; $\\bar{s}_{num}$/$\\bar{s}_{rep}$ are theoretically identical (MinHash).",
-          "$\\bar{s}_{con}$/$\\bar{s}_{div}$ 所有配对 $\\rho \\geq 0.76$; $\\bar{s}_{num}$/$\\bar{s}_{rep}$ 理论恒等 (MinHash).", lang),
-        ha="center", fontsize=9, style="italic" if lang == "en" else "normal")
     fn = f"F4_spearman_st_3x3{'_cn' if lang == 'cn' else ''}"
     fig.savefig(OUT / f"{fn}.png", bbox_inches="tight")
     fig.savefig(OUT / f"{fn}.pdf", bbox_inches="tight")
