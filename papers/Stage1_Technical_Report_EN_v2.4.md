@@ -101,7 +101,7 @@ The main analysis (§1-§5) of this study uses **only sentence-transformers clas
 
 ### 3.1 Base Data (8 domains × 3 models × 4 components)
 
-![Figure 3 · s̄ four components × 8 domains × 3 sentence-transformers models · within-paradigm ranking stability](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model.pdf){width=92%}
+![s̄ four components × 8 domains × 3 sentence-transformers models · within-paradigm ranking stability](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model.pdf){width=92%}
 
 #### s̄_con
 
@@ -148,7 +148,7 @@ Identical across three models:
 
 ### 3.2 Cross-Model Stability (Spearman ρ + Kendall's W)
 
-![Figure 4 · Cross-model stability · pairwise Spearman ρ (3 sentence-transformers) · within-paradigm ranking agreement](ablation_results_20260424/figures/F4_spearman_st_3x3.pdf){width=80%}
+![Cross-model stability · pairwise Spearman ρ (3 sentence-transformers) · within-paradigm ranking agreement](ablation_results_20260424/figures/F4_spearman_st_3x3.pdf){width=80%}
 
 #### Pairwise Spearman ρ (3 models × 8 domains)
 
@@ -218,7 +218,7 @@ Three models exhibit moderate anisotropy · MiniLM the weakest (distillation tra
 
 ### 3.6 Vendi-SVD Near-Mathematical Equivalence (24 points · core finding)
 
-![Figure 2 · Vendi-SVD triangulation (sentence-transformers only, n=24, ρ ≈ -0.997)](ablation_results_20260424/figures/F2_vendi_svd_st_24pt.pdf){width=85%}
+![Vendi-SVD triangulation (sentence-transformers only, n=24, ρ ≈ -0.997)](ablation_results_20260424/figures/F2_vendi_svd_st_24pt.pdf){width=85%}
 
 For all 3 models × 8 domains = **24 points**, plotting s̄_div (Vendi) vs SVD top-10 ratio in log-log coordinates:
 
@@ -432,7 +432,7 @@ PubMedBERT 0.992 is the most anisotropic model recorded (from-scratch + single h
 
 > **Gao et al. 2019 [2] (ICLR) + Wang et al. 2020 [3] (ICLR)**: Theoretical foundations of anisotropy — softmax + weight tying + Zipf long-tail → narrow cone for low-frequency tokens. → Explains why BERT-style models (without uniformity loss) are necessarily strongly anisotropic.
 
-![Figure 1 · §6 probe summary · four-mechanism decomposition of FreeLaw "low-diversity" signal (includes Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition.pdf){width=95%}
+![§6 probe summary · four-mechanism decomposition of FreeLaw "low-diversity" signal (includes Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition.pdf){width=95%}
 
 ### 6.5 §6 Methodological Contributions (independent of main study)
 

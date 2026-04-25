@@ -101,7 +101,7 @@ header-includes:
 
 ### 3.1 基础数据 (8 域 × 3 模型 × 4 分量)
 
-![图 3 · s̄ 四分量 × 8 域 × 3 sentence-transformers 模型 · 范式内跨模型排序稳定](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model_cn.pdf){width=92%}
+![s̄ 四分量 × 8 域 × 3 sentence-transformers 模型 · 范式内跨模型排序稳定](ablation_results_20260424/figures/F3_sbar_heatmap_st_3model_cn.pdf){width=92%}
 
 #### s̄_con
 
@@ -148,7 +148,7 @@ header-includes:
 
 ### 3.2 跨模型稳定性 (Spearman ρ + Kendall's W)
 
-![图 4 · 跨模型稳定性 · 两两 Spearman ρ (3 sentence-transformers) · 范式内排序高度一致](ablation_results_20260424/figures/F4_spearman_st_3x3_cn.pdf){width=80%}
+![跨模型稳定性 · 两两 Spearman ρ (3 sentence-transformers) · 范式内排序高度一致](ablation_results_20260424/figures/F4_spearman_st_3x3_cn.pdf){width=80%}
 
 #### Pairwise Spearman ρ (3 模型 × 8 域)
 
@@ -218,7 +218,7 @@ FreeLaw 在 K ∈ [2, 50] 全部 < 0.045. K-means seed scan (5 seeds at K=5) σ 
 
 ### 3.6 Vendi-SVD 近数学等价性 (24 点 · 核心发现)
 
-![图 2 · Vendi-SVD 三角印证 · sentence-transformers 主线 · n=24 · ρ ≈ -0.997](ablation_results_20260424/figures/F2_vendi_svd_st_24pt_cn.pdf){width=85%}
+![Vendi-SVD 三角印证 · sentence-transformers 主线 · n=24 · ρ ≈ -0.997](ablation_results_20260424/figures/F2_vendi_svd_st_24pt_cn.pdf){width=85%}
 
 对所有 3 模型 × 8 域 = **24 个点**, 在 log-log 坐标下作 s̄_div (Vendi) vs SVD top-10 ratio:
 
@@ -432,7 +432,7 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 > **Gao et al. 2019 [2] (ICLR) + Wang et al. 2020 [3] (ICLR)**: anisotropy 理论根基 — softmax + weight tying + Zipf 长尾 → 低频 token narrow cone. → 解释为何 BERT-style 模型 (无 uniformity loss) 必然各向异性强.
 
-![图 1 · §6 探针总结 · FreeLaw "低多样" 信号的四重机制分解 (含 Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition_cn.pdf){width=95%}
+![§6 探针总结 · FreeLaw "低多样" 信号的四重机制分解 (含 Legal-BERT)](ablation_results_20260424/figures/F1_I6_four_mechanism_decomposition_cn.pdf){width=95%}
 
 ### 6.5 §6 方法学贡献 (独立于主线)
 
