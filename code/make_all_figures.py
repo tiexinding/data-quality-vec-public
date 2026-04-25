@@ -460,6 +460,27 @@ def make_f2_st(lang):
     print(f"F2-ST ({lang}) saved: ρ = {rho_all:.3f}, n=24")
 
 
+def kendall_w_tie_corrected(value_matrix):
+    """Kendall's W with proper ties correction (Friedman 1937).
+
+    value_matrix: shape (n_raters, n_items)
+    Returns: W (ties-corrected)
+    """
+    from scipy.stats import rankdata
+    m, n = value_matrix.shape  # m raters, n items
+    ranks = np.array([rankdata(value_matrix[i, :]) for i in range(m)])
+    R = np.sum(ranks, axis=0)
+    R_bar = m * (n + 1) / 2
+    S = np.sum((R - R_bar) ** 2)
+    # Ties correction term
+    T = 0.0
+    for i in range(m):
+        _, counts = np.unique(ranks[i, :], return_counts=True)
+        T += np.sum(counts ** 3 - counts)
+    denom = m ** 2 * (n ** 3 - n) - m * T
+    return 12.0 * S / denom if denom > 0 else 1.0
+
+
 def make_f3_st(lang):
     """F3 main-study version · 3 sentence-transformers models × 8 domains × 4 components."""
     configure_mpl(lang)
@@ -475,12 +496,8 @@ def make_f3_st(lang):
         im = ax.imshow(mat, cmap=WONG_SEQUENTIAL, aspect="auto")
         ax.set_xticks(np.arange(8)); ax.set_xticklabels(domain_shorts, rotation=40, ha="right")
         ax.set_yticks(np.arange(3)); ax.set_yticklabels(ST_MODEL_LABELS)
-        # Compute Kendall W from the 3-model rank consistency
-        from scipy.stats import rankdata
-        ranks = np.array([rankdata(mat[i, :]) for i in range(3)])
-        n_items = 8; n_raters = 3
-        S = np.sum((np.sum(ranks, axis=0) - n_raters * (n_items + 1) / 2) ** 2)
-        w_val = 12 * S / (n_raters ** 2 * (n_items ** 3 - n_items))
+        # Kendall's W with ties correction
+        w_val = kendall_w_tie_corrected(mat)
         w_color = "#2E7D32" if w_val >= 0.7 else ("#F57C00" if w_val >= 0.5 else "#C62828")
         verdict = T("strong", "强一致", lang) if w_val >= 0.7 else (
                   T("moderate", "中一致", lang) if w_val >= 0.5 else T("weak", "弱一致", lang))
@@ -507,7 +524,6 @@ def make_f4_st(lang):
     configure_mpl(lang)
     fig, axs = plt.subplots(2, 2, figsize=(10, 9.5))
     comp_lbls = COMP_LABELS_CN if lang == "cn" else COMP_LABELS_EN
-    from scipy.stats import rankdata
     for ci, (comp, label) in enumerate(zip(COMPONENTS, comp_lbls)):
         ax = axs[ci // 2, ci % 2]
         # Build 3x3 Spearman ρ matrix
@@ -522,12 +538,9 @@ def make_f4_st(lang):
                     rho_mat[i, j] = 1.0
                 else:
                     rho_mat[i, j] = spearmanr(vals[i, :], vals[j, :]).correlation
-        # Kendall W
-        ranks = np.array([rankdata(vals[i, :]) for i in range(3)])
+        # Kendall W (ties-corrected)
+        w_val = kendall_w_tie_corrected(vals)
         n_items = 8; n_raters = 3
-        S = np.sum((np.sum(ranks, axis=0) - n_raters * (n_items + 1) / 2) ** 2)
-        w_val = 12 * S / (n_raters ** 2 * (n_items ** 3 - n_items))
-        # χ² and p (Friedman approximation: χ² = n_raters × (n_items - 1) × W)
         from scipy.stats import chi2 as chi2_dist
         chi2_val = n_raters * (n_items - 1) * w_val
         p_val = 1 - chi2_dist.cdf(chi2_val, df=n_items - 1)
