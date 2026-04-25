@@ -567,6 +567,8 @@ PubMedBERT 0.992 是迄今最各向异性的模型 (from-scratch + 单一同质�
 
 **Code & data**: <https://github.com/tiexinding/data-quality-vec-public> (release: v2.4 / 2026-04-25)
 
+**Zenodo DOI**: [10.5281/zenodo.19762059](https://doi.org/10.5281/zenodo.19762059) — 引用本研究请使用此 DOI.
+
 仓库内容: 中英双版技术报告 v2.4 + 主线/探针/消融/5 处理共 19 份 CSV/JSON 数据 + F1-F4 主图 (中英 PNG+PDF 16 份) + 主管道脚本 (`run_stage1_sbar_v2.py`) + SVD 各向异性诊断 + K-scan + 图生成 + PDF 构建脚本. License: MIT.
 
 中间 embedding (`.npy`, ~380 MB) 与 text cache (~137 MB) 不入仓, 可由 `code/run_stage1_sbar_v2.py` 从 `monology/pile-uncopyrighted` (HuggingFace) + 各模型 checkpoint 重新生成.

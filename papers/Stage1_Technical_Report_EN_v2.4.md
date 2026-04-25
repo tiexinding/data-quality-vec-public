@@ -563,6 +563,8 @@ All code, data, and a transparent data-reference document for this study are pub
 
 **Code & data**: <https://github.com/tiexinding/data-quality-vec-public> (release: v2.4 / 2026-04-25)
 
+**Zenodo DOI**: [10.5281/zenodo.19762059](https://doi.org/10.5281/zenodo.19762059) — please use this DOI when citing this work.
+
 Repository contents: bilingual technical report v2.4 (EN + CN) + 19 CSV/JSON data files (primary / probe / ablation / 5-treatment) + F1-F4 main figures (16 PNG/PDF, EN + CN) + main pipeline script (`run_stage1_sbar_v2.py`) + SVD anisotropy diagnostic + K-scan + figure generation + PDF builder. License: MIT.
 
 Intermediate embeddings (`.npy`, ~380 MB) and text caches (~137 MB) are NOT included in the repository; they will be regenerated on the fly from `monology/pile-uncopyrighted` (HuggingFace) and the listed model checkpoints by `code/run_stage1_sbar_v2.py`.

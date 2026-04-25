@@ -89,23 +89,23 @@ Every number in the v2.4 paper is traceable to a CSV/JSON in `data/`. The transp
 
 ## Citation
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19762059.svg)](https://doi.org/10.5281/zenodo.19762059)
+
+**Zenodo DOI**: [10.5281/zenodo.19762059](https://doi.org/10.5281/zenodo.19762059)
+
 ```bibtex
 @misc{ding2026dataqualityvec,
-  author = {Ding, Tiexin},
-  title  = {A Data Quality Vectorization Framework for Neural Networks · Measurability and Cross-Model Stability Study},
-  year   = {2026},
-  howpublished = {\url{https://github.com/tiexinding/data-quality-vec-public}},
-  note   = {Independent research}
+  author       = {Ding, Tiexin},
+  title        = {A Data Quality Vectorization Framework for Neural Networks
+                  · Measurability and Cross-Model Stability Study},
+  year         = {2026},
+  publisher    = {Zenodo},
+  version      = {v2.4},
+  doi          = {10.5281/zenodo.19762059},
+  url          = {https://doi.org/10.5281/zenodo.19762059},
+  howpublished = {\url{https://github.com/tiexinding/data-quality-vec-public}}
 }
 ```
-
-**Zenodo DOI** (to be filled in after v2.4 deposit is finalized):
-
-```
-10.5281/zenodo.XXXXXXXX
-```
-
-Once the deposit lands, this README, the BibTeX entry above, and the code+data link in the paper will be updated to point at the canonical DOI.
 
 ## Related work
 
