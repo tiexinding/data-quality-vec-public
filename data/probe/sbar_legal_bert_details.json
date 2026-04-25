@@ -1,0 +1,74 @@
+[
+  {
+    "subset": "Pile-CC",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.030795758590102196,
+    "s_bar_num": 1.0,
+    "s_bar_div": 0.0009598945379257202,
+    "s_bar_rep": 0.0
+  },
+  {
+    "subset": "Wikipedia (en)",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.034277647733688354,
+    "s_bar_num": 0.9986,
+    "s_bar_div": 0.0011784157752990723,
+    "s_bar_rep": 0.0013999999999999568
+  },
+  {
+    "subset": "ArXiv",
+    "n": 2657,
+    "trunc_pos": "head",
+    "s_bar_con": 0.06111882999539375,
+    "s_bar_num": 0.9992472713586752,
+    "s_bar_div": 0.0007858301401138305,
+    "s_bar_rep": 0.0007527286413248069
+  },
+  {
+    "subset": "Github",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.029458660632371902,
+    "s_bar_num": 0.9862,
+    "s_bar_div": 0.0012522672414779664,
+    "s_bar_rep": 0.013800000000000034
+  },
+  {
+    "subset": "PubMed Central",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.04923221468925476,
+    "s_bar_num": 0.999,
+    "s_bar_div": 0.0008784000277519226,
+    "s_bar_rep": 0.0010000000000000009
+  },
+  {
+    "subset": "FreeLaw",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.10449130833148956,
+    "s_bar_num": 0.9952,
+    "s_bar_div": 0.001017902374267578,
+    "s_bar_rep": 0.0048000000000000265
+  },
+  {
+    "subset": "StackExchange",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.06809990108013153,
+    "s_bar_num": 1.0,
+    "s_bar_div": 0.000976794719696045,
+    "s_bar_rep": 0.0
+  },
+  {
+    "subset": "USPTO Backgrounds",
+    "n": 5000,
+    "trunc_pos": "head",
+    "s_bar_con": 0.06545545905828476,
+    "s_bar_num": 0.999,
+    "s_bar_div": 0.0008934429287910462,
+    "s_bar_rep": 0.0010000000000000009
+  }
+]
